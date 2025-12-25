@@ -1,0 +1,20 @@
+body {
+    background-color: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    color: white;
+}
+
+.game-container {
+    text-align: center;
+}
+
+canvas {
+    border: 5px solid #4CAF50;
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+    background-color: #000;
+}
