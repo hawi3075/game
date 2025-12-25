@@ -2,13 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Retro Snake Game</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game Pro</title>
+    <link rel="stylesheet" href="style.css"> </head>
 <body>
-    <div class="game-container">
-        <h1>Score: <span id="score">0</span></h1>
-        <canvas id="snakeGame" width="400" height="400"></canvas>
+    <div class="mobile-wrapper">
+        <div class="game-header">
+            <div class="stat-box">
+                <span>SCORE</span>
+                <div id="score">0</div>
+            </div>
+            <div class="stat-box">
+                <span>BEST</span>
+                <div id="highScore">0</div>
+            </div>
+        </div>
+
+        <div class="board-container">
+            <canvas id="snakeGame" width="300" height="300"></canvas>
+            
+            <div id="gameOverScreen" class="overlay hidden">
+                <h2>GAME OVER</h2>
+                <p>FINAL SCORE</p>
+                <h1 id="finalScore">0</h1>
+                <button onclick="resetGame()" class="play-again-btn">↻ Play Again</button>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn up" onclick="changeDir('UP')">▲</button>
+            <div class="middle-btns">
+                <button class="btn left" onclick="changeDir('LEFT')">◀</button>
+                <button class="btn right" onclick="changeDir('RIGHT')">▶</button>
+            </div>
+            <button class="btn down" onclick="changeDir('DOWN')">▼</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

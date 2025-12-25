@@ -1,20 +1,97 @@
 body {
-    background-color: #1a1a1a;
+    background-color: #0f172a;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: sans-serif;
     color: white;
 }
 
-.game-container {
-    text-align: center;
+.mobile-wrapper {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 40px;
+    width: 320px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.stat-box span {
+    font-size: 10px;
+    color: #94a3b8;
+    display: block;
+}
+
+.stat-box div {
+    font-size: 22px;
+    font-weight: bold;
+    color: #38bdf8;
+}
+
+.board-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
 }
 
 canvas {
-    border: 5px solid #4CAF50;
-    box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
-    background-color: #000;
+    background-color: #020617;
+    background-image: 
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    border-radius: 12px;
 }
+
+/* Game Over Overlay */
+.overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    transition: 0.3s;
+}
+
+.hidden { display: none; }
+
+.play-again-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+/* Buttons */
+.controls {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.btn {
+    width: 55px; height: 55px;
+    background: #334155;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.middle-btns { display: flex; gap: 60px; margin: 5px 0; }
