@@ -5,17 +5,21 @@ const highScoreElement = document.getElementById("highScore");
 const gameOverScreen = document.getElementById("gameOverScreen");
 const finalScoreElement = document.getElementById("finalScore");
 
+// GAME CONFIGURATION
 const box = 20; 
+const gameSpeed = 250; // INCREASED: 250ms is much slower and easier to control
+
 let score = 0;
 let highScore = localStorage.getItem("snakeHighScore") || 0;
 highScoreElement.innerText = highScore;
 
 let snake = [{ x: 8 * box, y: 10 * box }];
 let food = getRandomFood();
-let d = "RIGHT"; // Start moving right
+let d = null; 
+let nextDir = null; 
 let gameRunning = true;
 
-// Handle Keyboard and Button Clicks
+// Direction Logic
 document.addEventListener("keydown", (e) => {
     if(e.keyCode == 37) changeDir("LEFT");
     if(e.keyCode == 38) changeDir("UP");
@@ -24,16 +28,17 @@ document.addEventListener("keydown", (e) => {
 });
 
 function changeDir(newDir) {
-    if(newDir == "LEFT" && d != "RIGHT") d = "LEFT";
-    else if(newDir == "UP" && d != "DOWN") d = "UP";
-    else if(newDir == "RIGHT" && d != "LEFT") d = "RIGHT";
-    else if(newDir == "DOWN" && d != "UP") d = "DOWN";
+    if(newDir == "LEFT" && d == "RIGHT") return;
+    if(newDir == "UP" && d == "DOWN") return;
+    if(newDir == "RIGHT" && d == "LEFT") return;
+    if(newDir == "DOWN" && d == "UP") return;
+    nextDir = newDir; 
 }
 
 function getRandomFood() {
     return {
-        x: Math.floor(Math.random() * 14 + 1) * box,
-        y: Math.floor(Math.random() * 14 + 1) * box
+        x: Math.floor(Math.random() * (canvas.width / box - 1)) * box,
+        y: Math.floor(Math.random() * (canvas.height / box - 1)) * box
     };
 }
 
@@ -42,42 +47,42 @@ function draw() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw Snake (Green color from your design)
+    // Draw Food
+    ctx.fillStyle = "#F87171";
+    ctx.fillRect(food.x + 2, food.y + 2, box - 4, box - 4);
+
+    // Draw Snake
     for(let i = 0; i < snake.length; i++) {
         ctx.fillStyle = (i == 0) ? "#4ADE80" : "#22C55E"; 
-        ctx.fillRect(snake[i].x, snake[i].y, box - 2, box - 2); // Small gap for grid look
+        ctx.fillRect(snake[i].x + 1, snake[i].y + 1, box - 2, box - 2);
     }
 
-    // Draw Food (Red)
-    ctx.fillStyle = "#F87171";
-    ctx.fillRect(food.x, food.y, box - 2, box - 2);
+    if (nextDir) {
+        d = nextDir;
+        let snakeX = snake[0].x;
+        let snakeY = snake[0].y;
 
-    let snakeX = snake[0].x;
-    let snakeY = snake[0].y;
+        if( d == "LEFT") snakeX -= box;
+        if( d == "UP") snakeY -= box;
+        if( d == "RIGHT") snakeX += box;
+        if( d == "DOWN") snakeY += box;
 
-    if( d == "LEFT") snakeX -= box;
-    if( d == "UP") snakeY -= box;
-    if( d == "RIGHT") snakeX += box;
-    if( d == "DOWN") snakeY += box;
+        if(snakeX == food.x && snakeY == food.y) {
+            score++;
+            scoreElement.innerText = score;
+            food = getRandomFood();
+        } else {
+            snake.pop();
+        }
 
-    // Eating food
-    if(snakeX == food.x && snakeY == food.y) {
-        score++;
-        scoreElement.innerText = score;
-        food = getRandomFood();
-    } else {
-        snake.pop();
+        let newHead = { x: snakeX, y: snakeY };
+
+        if(snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
+            endGame();
+            return;
+        }
+        snake.unshift(newHead);
     }
-
-    let newHead = { x: snakeX, y: snakeY };
-
-    // Collision & Game Over
-    if(snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
-        endGame();
-        return;
-    }
-
-    snake.unshift(newHead);
 }
 
 function collision(head, array) {
@@ -90,21 +95,18 @@ function collision(head, array) {
 function endGame() {
     gameRunning = false;
     clearInterval(gameLoop);
-    
-    // Update High Score
     if(score > highScore) {
-        highScore = score;
-        localStorage.setItem("snakeHighScore", highScore);
-        highScoreElement.innerText = highScore;
+        localStorage.setItem("snakeHighScore", score);
+        highScoreElement.innerText = score;
     }
-
-    // Show Game Over Screen from your Stitch design
     finalScoreElement.innerText = score;
     gameOverScreen.classList.remove("hidden");
+    canvas.style.filter = "blur(4px)";
 }
 
 function resetGame() {
-    location.reload(); // Simplest way to restart
+    location.reload();
 }
 
-let gameLoop = setInterval(draw, 120);
+// Start the loop at the NEW slower speed
+let gameLoop = setInterval(draw, gameSpeed);
